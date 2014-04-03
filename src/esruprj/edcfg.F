@@ -3331,7 +3331,7 @@ C Defaults.
       character*32 WORDS(12)
 
       character path*72,LCMDFL*144,LTMP*144,GTGEOM*72
-      character MODE*4,fs*1,outs*124
+      character MODE*4,fs*1,outs*124,msg*96
       character OUTSTR*124,ctldoc*248,LCTLF*72,t96*96,t144*144,ETEXT*82
       character sfile*144,odir*84,subpath*84
       character action*3,GTNAME*15
@@ -3381,6 +3381,7 @@ C Set folder separator (fs) to \ or / as required.
       endif
       t96='  '
       t144='  '
+      msg='  '
 
 C Ask for source file name and if the file exists then read it;
 C otherwise make general defaults and allow input from scratch.
@@ -3411,10 +3412,10 @@ C the full path to the file.
       endif
 
 C Debug.
-C      write(6,*) ' after easkf ',ckpath
-C      write(6,*) ' ltmp is ',ltmp(1:lnblnk(ltmp))
-C      write(6,*) ' lcmdfl is ',lcmdfl(1:lnblnk(ltmp))
-C      write(6,*) ' path is ',path(1:lnblnk(path))
+      write(6,*) ' after easkf ',ckpath
+      write(6,*) ' ltmp is ',ltmp(1:lnblnk(ltmp))
+      write(6,*) ' lcmdfl is ',lcmdfl(1:lnblnk(ltmp))
+      write(6,*) ' path is ',path(1:lnblnk(path))
 
 C If requested, find the path and local file name.
       if(ckpath)then
@@ -3429,10 +3430,10 @@ C If requested, find the path and local file name.
         call fdroot(LCMDFL,path,LCFGF)
 
 C Debug (and the following tests are primarily for Linux/OSX/Unix).
-C        write(t144,*) ' after fdroot path is ',path(1:lnblnk(path))
-C        call edisp(iuout,t144)
-C        write(t144,*) ' model configuration is ',lcfgf(1:lnblnk(lcfgf))
-C        call edisp(iuout,t144)
+        write(t144,*) ' after fdroot path is ',path(1:lnblnk(path))
+        call edisp(iuout,t144)
+        write(t144,*) ' model configuration is ',lcfgf(1:lnblnk(lcfgf))
+        call edisp(iuout,t144)
         if(path(1:2).eq.'./')then
 
 C A ./ indicates that fdroot found no file separators. Must be in cfg folder.
@@ -3453,8 +3454,8 @@ C There were folder separators in the name.
           call ckaccess(ifold,iaccess,icerr,path)
 
 C Debug.
-C          write(t144,*) 'a iaccess is ',iaccess,icerr,ifold,path
-C          call edisp(iuout,t144)
+          write(t144,*) 'a iaccess is ',iaccess,icerr,ifold,path
+          call edisp(iuout,t144)
           if(iaccess.eq.1)then
 
 C If iaccedss is non-zero then we do not have permission to write there
@@ -3477,16 +3478,16 @@ C we can recognise that we started in a cfg folder.
             lnpath=lnblnk(path)
 
 C Debug.
-C            write(t144,*) ' GTK path is ',path(1:lnblnk(path))
-C            call edisp(iuout,t144)
-C            write(t144,*) ' GTK odir is ',odir(1:lnblnk(odir))
-C            call edisp(iuout,t144)
+            write(t144,*) ' GTK path is ',path(1:lnblnk(path))
+            call edisp(iuout,t144)
+            write(t144,*) ' GTK odir is ',odir(1:lnblnk(odir))
+            call edisp(iuout,t144)
             if(path(1:lnpath).eq.odir(1:lnpath))then
               browse=.false.
-C              call edisp(iuout,'User can modify this model.')
+              call edisp(iuout,'User can modify this model.')
             elseif(path(1:lnpath-1).eq.odir(1:lnpath-1))then
               browse=.false.
-C              call edisp(iuout,'User can modify this model.')
+              call edisp(iuout,'User can modify this model.')
             else
 
 C We could get false browse=.true. in terms of the logic.
@@ -3513,7 +3514,7 @@ C writtn to (if iaccess is something other than one.)
           call ckaccess(ifold,iaccess,icerr,path)
 
 C Debug.
-C          write(6,*) 'b iaccess is ',iaccess,icerr,ifold,path
+          write(6,*) 'b iaccess is ',iaccess,icerr,ifold,path
 
           if(iaccess.eq.1)then
             call tstamp('>','PRJ: on browse mode')
@@ -3539,7 +3540,7 @@ C it was a root name).
       call ckaccess(ifold,iaccess,icerr,LCMDFL)
 
 C Debug.
-C      write(6,*) 'c iaccess is ',iaccess,icerr,ifold,LCMDFL
+      write(6,*) 'c iaccess is ',iaccess,icerr,ifold,LCMDFL
 
       if(ifold.eq.0.and.icerr.eq.0)then
         CALL ERPFREE(IFCFG,ISTAT)
@@ -3554,7 +3555,7 @@ C configuration files.
         ifold=-1
         call ckaccess(ifold,iaccess,icerr,t144)
 C Debug.
-C        write(6,*) 'd iaccess is ',iaccess,icerr,ifold,t144
+        write(6,*) 'd iaccess is ',iaccess,icerr,ifold,t144
         if(ifold.eq.1.and.icerr.eq.0)then
           lex=MIN0(lnblnk(LCMDFL),32)
           write(cfgroot,'(a)',IOSTAT=ios,ERR=13) LCMDFL(1:lex)
@@ -3563,22 +3564,6 @@ C        write(6,*) 'd iaccess is ',iaccess,icerr,ifold,t144
           write(subpath,'(3a)',IOSTAT=ios,ERR=14) 
      &      odir(1:lnblnk(odir)),fs,t144(1:lnblnk(t144))
      
-#ifdef OSX
-C In OSX slightly different logic. If path ls ./ then standard logic
-C works. If path begins with /usr/esru then no need to prepend odir.
-          if(path(1:2).eq.'./')then
-            continue
-          elseif(path(1:9).eq.'/usr/esru')then
-            subpath=' '
-            write(subpath,'(a)',IOSTAT=ios,ERR=14) path(1:lnblnk(path))
-          else
-            continue
-          endif
-
-C Debug.
-C          write(6,*) ' subpath of folder is ',subpath(1:lnblnk(subpath))
-
-#endif
 #ifdef MINGW
 C In MINGW slightly different logic. If path ls ./ then standard logic
 C works. If path begins C:/ or D:/ or E:/ or F:/ no need to prepend odir.
@@ -3636,7 +3621,7 @@ C Try to use information gathered from file scan.
      &          listfolder(ivlist(ix))(1:lenlistfolder(ivlist(ix)))
 
 C Debug.
-C              write(6,*) 'sfile is ',sfile
+              write(6,*) 'sfile is ',sfile
 
               call fdroot(sfile,path,LCFGF)
               CALL ERPFREE(IFCFG,ISTAT)
@@ -3645,11 +3630,9 @@ C              write(6,*) 'sfile is ',sfile
           endif
         endif
       else
-        if(lnblnk(LCMDFL).le.72)then
-          write(LCFGF,'(a)',IOSTAT=ios,ERR=18) LCMDFL(1:lnblnk(LCMDFL))
-        else
-          write(LCFGF,'(a)',IOSTAT=ios,ERR=18) LCMDFL(1:72)
-        endif
+        write(LCFGF,'(a)',IOSTAT=ios,ERR=18) LCMDFL(1:lnblnk(LCMDFL))
+        CALL ERPFREE(IFCFG,ISTAT)
+        call FINDFIL(LCFGF,XST)
       endif
 
 C If not initially found check for if root name only given. Parse
@@ -3698,9 +3681,11 @@ C Check to see if LCFGF is in a cfg folder.
             else
               write(cfgroot,'(a)',IOSTAT=ios,ERR=13)WORDS(IW)(1:lwcfgr)
               lex=MIN0((3+1+4+lcfgr),96)
-              if(lex.ge.96)call usrmsg(
-     &          'The overall path is more than 96 char.',
-     &          'Suggest relocating model.','W')
+              if(lex.ge.96)then
+                write(msg,'(a,i2,a)') 'The overall path is',lex,
+     &            ' char (which is >96 char).'
+                call usrmsg(msg,'Suggest relocating model.','W')
+              endif
               write(t96,'(4a)',IOSTAT=ios,ERR=20) 'cfg',fs,
      &          LTMP(1:lcfgr),'.cfg'
             endif
@@ -3742,15 +3727,13 @@ C name as that the user entered.
      &              'The overall path is more than 96 char.',
      &              'Suggest relocating model.','W')
                   write(t96,'(6a)',IOSTAT=ios,ERR=20) 
-     &              LTMP(1:lcfgr),fs,'cfg',
-     &              fs,LTMP(1:lcfgr),'.cfg'
+     &              LTMP(1:lcfgr),fs,'cfg',fs,LTMP(1:lcfgr),'.cfg'
                 endif
               elseif(lwcfgr.le.4)then
                 write(cfgroot,'(a)',IOSTAT=ios,ERR=13) 
      &            WORDS(IW)(1:lwcfgr)
                 write(t96,'(6a)',IOSTAT=ios,ERR=20) 
-     &            LTMP(1:lcfgr),fs,'cfg',fs,
-     &            LTMP(1:lcfgr),'.cfg'
+     &            LTMP(1:lcfgr),fs,'cfg',fs,LTMP(1:lcfgr),'.cfg'
               endif
               if((t96(1:2).ne.'  ').and.(t96(1:4).ne.'UNKN'))then
                 XST=.false.

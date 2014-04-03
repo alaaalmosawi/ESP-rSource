@@ -170,4 +170,4 @@ clean:
 	e3dviews.F ecasctl.F econstr.F edcon.F edcondb.F edatabase.F egeometry.F egtgeom.F \
 	emfnetw.F enetmisc.F enetrewr.F emkcfg.F eroper.F esru_misc.F esystem.F filelist.F \
 	inside.F item.F mfcdat.F nwkrewr.F pltcfg.F readTrnsys.F rwipv.F rwsbem.F \
-	sort.F startup.F tdfile.F h3kmodule.f90 qrun.F azalt.f
+	sort.F startup.F tdfile.F h3kmodule.f90 qrun.F azalt.F
