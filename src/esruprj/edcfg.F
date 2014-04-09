@@ -3412,10 +3412,10 @@ C the full path to the file.
       endif
 
 C Debug.
-      write(6,*) ' after easkf ',ckpath
-      write(6,*) ' ltmp is ',ltmp(1:lnblnk(ltmp))
-      write(6,*) ' lcmdfl is ',lcmdfl(1:lnblnk(ltmp))
-      write(6,*) ' path is ',path(1:lnblnk(path))
+c      write(6,*) ' after easkf ',ckpath
+c      write(6,*) ' ltmp is ',ltmp(1:lnblnk(ltmp))
+c      write(6,*) ' lcmdfl is ',lcmdfl(1:lnblnk(ltmp))
+c      write(6,*) ' path is ',path(1:lnblnk(path))
 
 C If requested, find the path and local file name.
       if(ckpath)then
