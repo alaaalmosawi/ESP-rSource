@@ -1843,7 +1843,7 @@ C with the construction (TRAN is an ok mis-match).
                     if(WORD(1:4).eq.'TRAN')then
                       continue
                     else
-		      write(outs,*) 'Optics ',WORD(1:lnow),
+                      write(outs,*) 'Optics ',WORD(1:lnow),
      &                ' in geo file does not match optics of the MLC ',
      &                  mlcname(ICF)(1:12),' ',OPT(1:lno)
                       call edisp(iuout,outs)
@@ -3833,7 +3833,7 @@ C Surface area is given by:
 C Check for -ve surface area: windows wrongly specified.
 C Suppress warning message if UK NCM notional model
         IF(SNA(I).LT.0.00001.AND.INOTI.NE.1)THEN
-	  write(outs,'(a,i3,a)') ' Area of zone surf ',i,
+          write(outs,'(a,i3,a)') ' Area of zone surf ',i,
      &      ' is less than 0.00001m^2!'
           CALL USRMSG(outs,
      &      'Other geometric properties may be incorrect.','W')
@@ -3983,7 +3983,7 @@ C Suppress warning message if UK NCM notional model
         ZAREA=0.5*SQRT(XS*XS+YS*YS+ZS*ZS)
         SSNA(icc)=ZAREA
         IF(SSNA(icc).LT.0.00001.AND.INOTI.NE.1)THEN
-	  write(outs,'(a,i3,a)') ' Area of surf connection ',icc,
+          write(outs,'(a,i3,a)') ' Area of surf connection ',icc,
      &      ' is less than 0.00001m^2!'
           CALL USRMSG(outs,
      &      'Other geometric properties may be incorrect.','W')
@@ -4119,8 +4119,8 @@ C the same as computed above.
         vdy=SSUREQN(icc,2)
         vdz=SSUREQN(icc,3)
         call UV2AZ(vdx,vdy,vdz,uazim,uelev)
-	call eclose(uazim,SSPAZI(icc),0.001,closeaz)
-	call eclose(uelev,SSPELV(icc),0.001,closeel)	
+        call eclose(uazim,SSPAZI(icc),0.001,closeaz)
+        call eclose(uelev,SSPELV(icc),0.001,closeel)
 
 C << this could be a place to insert special logic for horizontal
 C << surfaces as done in pangs in esruish.
@@ -4793,7 +4793,7 @@ C other surface (grandparent)
                     ICV=1
                   ENDIF
  114            CONTINUE
-		IF(ICV.NE.1)THEN
+                IF(ICV.NE.1)THEN
                   IDO=0
                   DO 118 ICCV=1,MV
                     IF(IDVN(ICCV).EQ.IIVER)THEN
@@ -4804,7 +4804,7 @@ C other surface (grandparent)
                     NCV=NCV+1
                     IDVN(NCV)=IIVER
                   ENDIF
-		ENDIF
+                ENDIF
  113          CONTINUE
             ENDIF
  112      CONTINUE

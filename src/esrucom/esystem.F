@@ -1690,7 +1690,7 @@ C call ripvdat for data within the cfg file.
           CALL ERPFREE(IUTDF,ISTAT)
           call FINDFIL(lipvdatf,XST)
           if(XST)then
-      ipvact='ipv'
+            ipvact='ipv'
             call ripvdat(IUTDF,lipvdatf,ipvact,ier)
             CALL ERPFREE(IUTDF,ISTAT)
           endif
